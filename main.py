@@ -71,15 +71,19 @@ def getBeijinTime():
     r = requests.get(url=url, headers=hea)
     if r.status_code == 200:
         result = r.text
-        pattern = re.compile('\\d{4}-\\d{2}-\\d{2} (\\d{2}):\\d{2}:\\d{2}')
+        pattern = re.compile('\\d{4}-\\d{2}-(\\d{2}) (\\d{2}):\\d{2}:\\d{2}')
         find = re.search(pattern, result)
-        hour = find.group(1)
+        day = find.group(1)
+        hour = find.group(2)
         min_ratio = max(math.ceil((int(hour) / 3) - 1), 0)
         max_ratio = math.ceil(int(hour) / 3)
         min_1 = 1500 * min_ratio
         max_1 = 1500 * max_ratio
         min_1 = int(K * min_1)
         max_1 = int(K * max_1)
+        if int(day) in [6, 12, 18, 24, 30]:
+            print("今天休息")
+            return
     else:
         print("获取北京时间失败")
         return
